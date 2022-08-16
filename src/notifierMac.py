@@ -1,6 +1,4 @@
-import subprocess
-import os
-import time, pathlib
+import requests
 
 CMD = '''
 on run argv
@@ -17,10 +15,10 @@ class Notifier:
         self.status_check = state
     
     def send(self):
-        title = self.title
-        text = self.info
-        appleScriptNotification = 'display alert "{0} \n \n {1}" '.format(text, title)
-        os.system("osascript -e '{0}'".format(appleScriptNotification))
+        requests.post(url='https://grouch-webhook-service.tmthecoder.workers.dev/', json={
+            "title": self.title,
+            "description": self.info
+        })
 
     def run(self):
         while not self.status_check():
